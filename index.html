@@ -2,35 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Home - CareersPro</title>
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <title>Student Tasks</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
-  <h1>Home Page</h1>
+  <h1>Student Dashboard</h1>
   <nav>
     <a href="index.html">Home</a> |
-    <a href="about.html">About</a> |
-    <a href="contact.html">Contact</a>
+    <a href="subjects.html">Subjects</a> |
+    <a href="about.html">About</a>
   </nav>
   <div id="root"></div>
 
   <script type="text/babel">
-    function HomeApp() {
-      const [colour, setColour] = React.useState('#ffffff');
+    // Initialize Supabase
+    const supabaseUrl = "YOUR_SUPABASE_URL";
+    const supabaseKey = "YOUR_SUPABASE_ANON_KEY";
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    function App() {
+      const [tasks, setTasks] = React.useState([]);
+      const [newTask, setNewTask] = React.useState("");
+
+      const fetchTasks = async () => {
+        let { data } = await supabase.from("tasks").select("*");
+        setTasks(data);
+      };
+
+      const addTask = async () => {
+        if(newTask.trim() === "") return;
+        await supabase.from("tasks").insert([{ title: newTask, done: false }]);
+        setNewTask("");
+        fetchTasks();
+      };
+
+      const toggleDone = async (id, done) => {
+        await supabase.from("tasks").update({ done: !done }).eq("id", id);
+        fetchTasks();
+      };
+
+      React.useEffect(() => { fetchTasks(); }, []);
 
       return (
-        <div style={{ textAlign: 'center', marginTop: '20px' }}>
-          <div style={{ width: '200px', height: '200px', margin: '0 auto 20px', backgroundColor: colour, border: '2px solid black' }}></div>
-          <button onClick={() => setColour('#' + Math.floor(Math.random() * 16777215).toString(16))}>
-            Generate Random Colour
-          </button>
+        <div style={{ marginTop: "20px" }}>
+          <input value={newTask} onChange={e => setNewTask(e.target.value)} placeholder="New task" />
+          <button onClick={addTask}>Add Task</button>
+          <ul>
+            {tasks.map(task => (
+              <li key={task.id}>
+                <input type="checkbox" checked={task.done} onChange={() => toggleDone(task.id, task.done)} />
+                {task.title}
+              </li>
+            ))}
+          </ul>
         </div>
       );
     }
 
-    ReactDOM.createRoot(document.getElementById('root')).render(<HomeApp />);
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
   </script>
 </body>
 </html>
