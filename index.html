@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Random Colour App</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <style>
+    body { text-align: center; font-family: sans-serif; margin-top: 50px; }
+    #box { width: 200px; height: 200px; margin: 0 auto 20px; border: 2px solid black; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    function App() {
+      const [colour, setColour] = React.useState('#ffffff');
+
+      const generateColour = () => {
+        const randomColour = '#' + Math.floor(Math.random() * 16777215).toString(16);
+        setColour(randomColour);
+      };
+
+      return (
+        <div>
+          <div id="box" style={{ backgroundColor: colour }}></div>
+          <button onClick={generateColour}>Generate Random Colour</button>
+          <p>Current Colour: {colour}</p>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
