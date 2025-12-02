@@ -2,38 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Random Colour App</title>
+  <title>Home - CareersPro</title>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-  <style>
-    body { text-align: center; font-family: sans-serif; margin-top: 50px; }
-    #box { width: 200px; height: 200px; margin: 0 auto 20px; border: 2px solid black; }
-  </style>
 </head>
 <body>
+  <h1>Home Page</h1>
+  <nav>
+    <a href="index.html">Home</a> |
+    <a href="about.html">About</a> |
+    <a href="contact.html">Contact</a>
+  </nav>
   <div id="root"></div>
 
   <script type="text/babel">
-    function App() {
+    function HomeApp() {
       const [colour, setColour] = React.useState('#ffffff');
 
-      const generateColour = () => {
-        const randomColour = '#' + Math.floor(Math.random() * 16777215).toString(16);
-        setColour(randomColour);
-      };
-
       return (
-        <div>
-          <div id="box" style={{ backgroundColor: colour }}></div>
-          <button onClick={generateColour}>Generate Random Colour</button>
-          <p>Current Colour: {colour}</p>
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <div style={{ width: '200px', height: '200px', margin: '0 auto 20px', backgroundColor: colour, border: '2px solid black' }}></div>
+          <button onClick={() => setColour('#' + Math.floor(Math.random() * 16777215).toString(16))}>
+            Generate Random Colour
+          </button>
         </div>
       );
     }
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+    ReactDOM.createRoot(document.getElementById('root')).render(<HomeApp />);
   </script>
 </body>
 </html>
